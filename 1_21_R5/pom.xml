@@ -17,7 +17,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
-      <version>1.21.8-R0.1-SNAPSHOT</version>
+      <version>1.21.7-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -35,8 +35,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
-          <source>21</source>
-          <target>21</target>
+          <release>21</release>
         </configuration>
       </plugin>
     </plugins>
