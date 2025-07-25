@@ -82,8 +82,14 @@ public class AnvilManager_V1_16_R3 extends AnvilWrapper {
             if(resultSlot.getItem().isEmpty()) {
                 resultSlot.set(getSlot(0).getItem().cloneItemStack());
             }
-            levelCost.set(0); /* Need to reset because it recalculates it */
             c(); /* broadcastChanges() */
+            sendLevelCost(); /* send ContainerData change packet */
+        }
+
+        private void sendLevelCost() {
+            EntityPlayer player = (EntityPlayer) this.player;
+            PacketPlayOutWindowData packet = new PacketPlayOutWindowData(this.windowId, 0, 0);
+            player.playerConnection.sendPacket(packet);
         }
 
         /*
