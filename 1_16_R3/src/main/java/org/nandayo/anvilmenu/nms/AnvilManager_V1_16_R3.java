@@ -83,9 +83,17 @@ public class AnvilManager_V1_16_R3 extends AnvilWrapper {
                 resultSlot.set(getSlot(0).getItem().cloneItemStack());
             }
             c(); /* broadcastChanges() */
-            sendLevelCost(); /* send ContainerData change packet */
+            sendLevelCost();
         }
 
+        /**
+         * Sends ContainerData packet manually.<br>
+         * Used after Container#c() since it doesn't update clientside level cost.<br>
+         *<br>
+         * PacketPlayOutWindowData(containerId, propertyIndex, value)<br>
+         * levelCost [ContainerProperty] index is usually 0.
+         * @since 0.1.1
+         */
         private void sendLevelCost() {
             EntityPlayer player = (EntityPlayer) this.player;
             PacketPlayOutWindowData packet = new PacketPlayOutWindowData(this.windowId, 0, 0);

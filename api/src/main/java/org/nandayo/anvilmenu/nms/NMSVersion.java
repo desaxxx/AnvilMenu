@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @since 0.1
+ */
 @SuppressWarnings("unused")
 public enum NMSVersion {
 
@@ -35,6 +38,11 @@ public enum NMSVersion {
     }
     static private final NMSVersion LATEST = NMSVersion.V1_21_R5;
 
+    /**
+     * Removes the name of the version without 'V'.
+     * @return String
+     * @since 0.1
+     */
     public String removeV() {
         return name().replace("V","");
     }
@@ -49,6 +57,12 @@ public enum NMSVersion {
         }
     }
 
+    /**
+     * Find the NMS version from given Minecraft version.
+     * @param minecraftVersion Minecraft version
+     * @return NMSVersion if found, else {@link #LATEST}.
+     * @since 0.1
+     */
     static public NMSVersion findVersion(int minecraftVersion) {
         return VERSION_MAP.getOrDefault(minecraftVersion, LATEST);
     }

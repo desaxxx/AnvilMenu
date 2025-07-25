@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @since 0.1
+ */
 @SuppressWarnings({"deprecation","unused"})
 public final class HexUtil {
     private static final Pattern COLORIZE_PATTERN = Pattern.compile(
@@ -16,6 +19,12 @@ public final class HexUtil {
     private static final Pattern LEGACY_HEX_COLOR_PATTERN = Pattern.compile("§x(§[0-9A-F]){6}", Pattern.CASE_INSENSITIVE);
 
 
+    /**
+     * Colorize the text with legacy Minecraft colors using {@link #COLORIZE_PATTERN}.
+     * @param text Text
+     * @return Colorized text
+     * @since 0.1
+     */
     @NotNull
     static public String colorize(String text) {
         if (text == null || text.isEmpty()) return "";
@@ -36,6 +45,12 @@ public final class HexUtil {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
+    /**
+     * Colorize the text with MiniMessage formats using {@link #LEGACY_COLOR_CODE_PATTERN} and {@link #LEGACY_HEX_COLOR_PATTERN}.
+     * @param text Text
+     * @return Colorized text
+     * @since 0.1
+     */
     @NotNull
     public static String colorToMiniMessage(String text) {
         if (text == null || text.isEmpty()) return "";
@@ -57,6 +72,7 @@ public final class HexUtil {
      * §x§f§f§f§f§f§f -> <#ffffff>
      * @param text Text to translate
      * @return Result
+     * @since 0.1
      */
     @NotNull
     static public String legacyHexToMiniMessage(String text) {
@@ -76,6 +92,7 @@ public final class HexUtil {
      * §f -> <white>
      * @param text Text to translate
      * @return Result
+     * @since 0.1
      */
     @NotNull
     static public String legacyToMiniMessage(String text) {
