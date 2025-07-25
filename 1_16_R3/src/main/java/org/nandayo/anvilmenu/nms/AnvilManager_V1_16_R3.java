@@ -82,6 +82,7 @@ public class AnvilManager_V1_16_R3 extends AnvilWrapper {
             if(resultSlot.getItem().isEmpty()) {
                 resultSlot.set(getSlot(0).getItem().cloneItemStack());
             }
+            levelCost.set(0); /* Need to reset because it recalculates it */
             c(); /* broadcastChanges() */
         }
 

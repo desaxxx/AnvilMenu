@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings({"deprecation","unused"})
-public class HexUtil {
+public final class HexUtil {
     private static final Pattern COLORIZE_PATTERN = Pattern.compile(
             "<(#[0-9A-F]{6}|aqua|black|blue|bold|dark_(aqua|blue|gray|green|purple|red)|gray|gold|green|italic|light_purple|obfuscated|red|reset|strikethrough|underline|white|yellow)>",
             Pattern.CASE_INSENSITIVE

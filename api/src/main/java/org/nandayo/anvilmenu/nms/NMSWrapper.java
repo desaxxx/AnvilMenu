@@ -3,7 +3,7 @@ package org.nandayo.anvilmenu.nms;
 import org.nandayo.anvilmenu.util.Wrapper;
 
 @SuppressWarnings("unused")
-public class NMSWrapper {
+public final class NMSWrapper {
 
     static private NMSVersion nmsVersion;
     static public NMSVersion getNMSVersion() {

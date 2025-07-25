@@ -2,7 +2,7 @@ package org.nandayo.anvilmenu.util;
 
 import org.bukkit.Bukkit;
 
-public class Wrapper {
+public final class Wrapper {
 
     static private int minecraftVersion = -1;
 
