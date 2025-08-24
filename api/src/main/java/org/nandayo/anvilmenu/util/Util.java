@@ -19,7 +19,7 @@ public final class Util {
     @ApiStatus.Internal
     static public void logInternal(String... msg) {
         for(String s : msg) {
-            Bukkit.getConsoleSender().sendMessage(HexUtil.colorize( INTERNAL_PREFIX + s));
+            Bukkit.getConsoleSender().sendMessage(INTERNAL_PREFIX + s);
         }
     }
 }
