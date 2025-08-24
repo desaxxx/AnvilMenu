@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.nandayo</groupId>
     <artifactId>AnvilMenu</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
   </parent>
 
   <build>
@@ -24,38 +24,14 @@
           <release>9</release>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.3</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
   </build>
 
   <repositories>
-    <!--    <repository>-->
-    <!--      <id>spigotmc-repo</id>-->
-    <!--      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>-->
-    <!--    </repository>-->
-    <!-- papermc 1.21.6 requires java21 -->
-    <repository>
-      <id>papermc-repo</id>
-      <url>https://repo.papermc.io/repository/maven-public/</url>
-    </repository>
+      <repository>
+          <id>spigotmc-repo</id>
+          <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      </repository>
   </repositories>
 
   <dependencies>
