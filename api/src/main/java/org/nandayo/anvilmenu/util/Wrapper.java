@@ -10,7 +10,7 @@ public final class Wrapper {
     static private int minecraftVersion = -1;
     /**
      * Get the Minecraft version of the Server.
-     * @return Integer value of the version. Format MC 1.xy.z -> xyz
+     * @return Integer value of the version. Format MC 1.wx.yz -> wxyz
      * @since 0.1
      */
     static public int getMinecraftVersion() {
@@ -20,14 +20,14 @@ public final class Wrapper {
 
     /**
      * Fetch the Minecraft version and calculate integer value of it.
-     * @return Integer value of the version. Format MC 1.xy.z -> xyz
+     * @return Integer value of the version. Format MC 1.wx.yz -> wxyz
      * @since 0.1
      */
     static private int fetchVersion() {
         String[] ver = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         if(ver.length < 2) {
             Util.logInternal("Could not fetch server version!");
-            return 165;
+            return 1605;
         }
         int major = 0;
         try {
@@ -40,6 +40,6 @@ public final class Wrapper {
             } catch (NumberFormatException ignored) {}
         }
 
-        return major * 10 + minor;
+        return major * 100 + minor;
     }
 }

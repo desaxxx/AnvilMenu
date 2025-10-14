@@ -21,7 +21,7 @@ public final class NMSWrapper {
 
     static private AnvilWrapper anvilWrapper;
     /**
-     * Get the {@link AnvilWrapper} from suitable NMS Version.
+     * Get the {@link AnvilWrapper} for suitable NMS Version.
      * @return AnvilWrapper
      * @since 0.1
      */
