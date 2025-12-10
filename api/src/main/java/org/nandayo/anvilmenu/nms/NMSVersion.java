@@ -31,14 +31,15 @@ public enum NMSVersion {
     V1_21_R3(2104),
     V1_21_R4(2105),
     V1_21_R5(2106,2107,2108),
-    V1_21_R6(2109,2110)
+    V1_21_R6(2109,2110),
+    V1_21_R7(2111)
     ;
 
     private final int[] minecraftVersions;
     NMSVersion(int... minecraftVersions) {
         this.minecraftVersions = minecraftVersions;
     }
-    static private final NMSVersion LATEST = NMSVersion.V1_21_R6;
+    static private final NMSVersion LATEST = NMSVersion.V1_21_R7;
 
     /**
      * Returns the name of the version without 'V'.
