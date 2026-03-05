@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_21_R7.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R7.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_21_R7.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R7.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +72,13 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
     void openMenu(@NotNull Player p, @NotNull MenuAnvilWrapper menu, @Nullable String title) {
         EntityPlayer player = handle(p);
         MenuAnvil menuAnvil = (MenuAnvil) menu;
+
+        Container result = CraftEventFactory.callInventoryOpenEvent(player, menuAnvil);
+        if(result == null) {
+            // InventoryOpenEvent was canceled
+            return;
+        }
+
         player.cn = menuAnvil;
         sendOpenScreenPacket(p, menu, title);
         player.a(menuAnvil);
@@ -87,6 +95,7 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
     void sendOpenScreenPacket(@NotNull Player p, @NotNull MenuAnvilWrapper menu, @Nullable String title) {
         EntityPlayer player = handle(p);
         MenuAnvil menuAnvil = (MenuAnvil) menu;
+        CraftEventFactory.callInventoryOpenEvent(player, menuAnvil);
         player.g.b(new PacketPlayOutOpenWindow(
                 menuAnvil.l,
                 Containers.i,
