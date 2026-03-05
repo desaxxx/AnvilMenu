@@ -95,7 +95,6 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
     void sendOpenScreenPacket(@NotNull Player p, @NotNull MenuAnvilWrapper menu, @Nullable String title) {
         EntityPlayer player = handle(p);
         MenuAnvil menuAnvil = (MenuAnvil) menu;
-        CraftEventFactory.callInventoryOpenEvent(player, menuAnvil);
         player.g.b(new PacketPlayOutOpenWindow(
                 menuAnvil.l,
                 Containers.i,
