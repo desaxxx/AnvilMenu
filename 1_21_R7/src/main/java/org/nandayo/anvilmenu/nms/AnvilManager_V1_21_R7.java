@@ -1,6 +1,7 @@
 package org.nandayo.anvilmenu.nms;
 
 import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.IInventory;
@@ -16,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Method;
 
 @SuppressWarnings("unused")
 public class AnvilManager_V1_21_R7 extends AnvilWrapper {
@@ -38,7 +41,8 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
     @Override
     public Inventory openInventory(@NotNull Player p, @NotNull MenuAnvilWrapper menuWrapper) {
         EntityPlayer player = handle(p);
-        player.r();
+        //player.r();
+        closeContainer(p);
 
         /* Typecast MenuAnvilWrapper to MenuAnvil */
         MenuAnvil menu = (MenuAnvil) menuWrapper;
@@ -82,6 +86,41 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
         player.cn = menuAnvil;
         sendOpenScreenPacket(p, menu, title);
         player.a(menuAnvil);
+    }
+
+    /*
+     * EntityPlayer#g                               -> EntityPlayer#connection [PlayerConnection]
+     * ServerCommonPacketListenerImpl#b(Packet<?>)  -> ServerCommonPacketListenerImpl#send(Packet<?>)
+     * EntityPlayer#s                               -> EntityPlayer#doCloseContainer()
+     *
+     * Replicates EntityPlayer#closeContainer() with inventory close reason OPEN_NEW for Paper servers
+     */
+    void closeContainer(@NotNull Player p) {
+        EntityPlayer player = handle(p);
+
+        handleCloseInventoryEvent(p);
+        player.g.b(new PacketPlayOutCloseWindow(player.cn.l));
+        player.s();
+    }
+
+    /*
+     * Try calling CraftEventFactory#handleInventoryCloseEvent(EntityHuman, InventoryCloseEvent.Reason.OPEN_NEW),
+     * which exists on Paper server.
+     * <br>
+     * Otherwise, call CraftEventFactory#handleInventoryCloseEvent(EntityHuman), which exists on Spigot
+     * server only.
+     */
+    void handleCloseInventoryEvent(@NotNull Player p) {
+        EntityPlayer player = handle(p);
+        try {
+            Class<?> reasonClass = Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
+            Method handleInventoryCloseEvent = CraftEventFactory.class.getMethod(
+                    "handleInventoryCloseEvent", EntityHuman.class, reasonClass
+            );
+            handleInventoryCloseEvent.invoke(null, player, reasonClass.getField("OPEN_NEW").get(null));
+        } catch (ReflectiveOperationException e) {
+            CraftEventFactory.handleInventoryCloseEvent(player);
+        }
     }
 
     /*
