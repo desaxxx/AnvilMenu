@@ -1,6 +1,7 @@
 package org.nandayo.anvilmenu.nms;
 
 import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.IInventory;
@@ -11,13 +12,36 @@ import net.minecraft.world.item.ItemStack;
 import org.bukkit.craftbukkit.v1_21_R5.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R5.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R5.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
 @SuppressWarnings("unused")
 public class AnvilManager_V1_21_R5 extends AnvilWrapper {
+
+    private MethodHandle paperInventoryCloseHandle;
+    private Object paperInventoryCloseReasonOpenNew;
+    public AnvilManager_V1_21_R5() {
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+            Class<?> reasonClass = Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
+            paperInventoryCloseReasonOpenNew = reasonClass.getField("OPEN_NEW").get(null);
+
+            // Signature: static void handleInventoryCloseEvent(EntityHuman, Reason)
+            paperInventoryCloseHandle = lookup.findStatic(
+                    CraftEventFactory.class,
+                    "handleInventoryCloseEvent",
+                    MethodType.methodType(void.class, EntityHuman.class, reasonClass)
+            );
+        } catch (ReflectiveOperationException ignored) {}
+    }
 
     private EntityPlayer handle(@NotNull Player p) {
         return ((CraftPlayer) p).getHandle();
@@ -31,13 +55,10 @@ public class AnvilManager_V1_21_R5 extends AnvilWrapper {
         return openInventory(p, menu);
     }
 
-    /*
-     * EntityPlayer#p()     -> EntityPlayer#closeContainer()
-     */
     @Override
     public Inventory openInventory(@NotNull Player p, @NotNull MenuAnvilWrapper menuWrapper) {
         EntityPlayer player = handle(p);
-        player.p();
+        closeContainer(p);
 
         /* Typecast MenuAnvilWrapper to MenuAnvil */
         MenuAnvil menu = (MenuAnvil) menuWrapper;
@@ -71,9 +92,51 @@ public class AnvilManager_V1_21_R5 extends AnvilWrapper {
     void openMenu(@NotNull Player p, @NotNull MenuAnvilWrapper menu, @Nullable String title) {
         EntityPlayer player = handle(p);
         MenuAnvil menuAnvil = (MenuAnvil) menu;
+
+        Container result = CraftEventFactory.callInventoryOpenEvent(player, menuAnvil);
+        if(result == null) {
+            // InventoryOpenEvent was canceled
+            return;
+        }
+
         player.cn = menuAnvil;
         sendOpenScreenPacket(p, menu, title);
         player.a(menuAnvil);
+    }
+
+    /*
+     * EntityPlayer#g                               -> EntityPlayer#connection [PlayerConnection]
+     * ServerCommonPacketListenerImpl#b(Packet<?>)  -> ServerCommonPacketListenerImpl#send(Packet<?>)
+     * EntityPlayer#q                               -> EntityPlayer#doCloseContainer()
+     *
+     * Replicates EntityPlayer#closeContainer() with inventory close reason OPEN_NEW for Paper servers
+     */
+    void closeContainer(@NotNull Player p) {
+        EntityPlayer player = handle(p);
+
+        handleCloseInventoryEvent(p);
+        player.g.b(new PacketPlayOutCloseWindow(player.cn.l));
+        player.q();
+    }
+
+    /*
+     * Try calling CraftEventFactory#handleInventoryCloseEvent(EntityHuman, InventoryCloseEvent.Reason.OPEN_NEW),
+     * which exists on Paper server.
+     * <br>
+     * Otherwise, call CraftEventFactory#handleInventoryCloseEvent(EntityHuman), which exists on Spigot
+     * server only.
+     */
+    void handleCloseInventoryEvent(@NotNull Player p) {
+        EntityPlayer player = handle(p);
+
+        if(paperInventoryCloseHandle != null) {
+            try {
+                paperInventoryCloseHandle.invoke(player, paperInventoryCloseReasonOpenNew);
+                return;
+            } catch (Throwable ignored) {}
+        }
+
+        CraftEventFactory.handleInventoryCloseEvent(player);
     }
 
     /*

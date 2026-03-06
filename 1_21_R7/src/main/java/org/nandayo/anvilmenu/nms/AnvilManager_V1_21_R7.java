@@ -55,9 +55,6 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
         return openInventory(p, menu);
     }
 
-    /*
-     * EntityPlayer#r()     -> EntityPlayer#closeContainer()
-     */
     @Override
     public Inventory openInventory(@NotNull Player p, @NotNull MenuAnvilWrapper menuWrapper) {
         EntityPlayer player = handle(p);
