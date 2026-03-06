@@ -18,10 +18,30 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 
 @SuppressWarnings("unused")
 public class AnvilManager_V1_21_R7 extends AnvilWrapper {
+
+    private MethodHandle paperInventoryCloseHandle;
+    private Object paperInventoryCloseReasonOpenNew;
+    public AnvilManager_V1_21_R7() {
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+            Class<?> reasonClass = Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
+            paperInventoryCloseReasonOpenNew = reasonClass.getField("OPEN_NEW").get(null);
+
+            // Signature: static void handleInventoryCloseEvent(EntityHuman, Reason)
+            paperInventoryCloseHandle = lookup.findStatic(
+                    CraftEventFactory.class,
+                    "handleInventoryCloseEvent",
+                    MethodType.methodType(void.class, EntityHuman.class, reasonClass)
+            );
+        } catch (ReflectiveOperationException ignored) {}
+    }
 
     private EntityPlayer handle(@NotNull Player p) {
         return ((CraftPlayer) p).getHandle();
@@ -41,7 +61,6 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
     @Override
     public Inventory openInventory(@NotNull Player p, @NotNull MenuAnvilWrapper menuWrapper) {
         EntityPlayer player = handle(p);
-        //player.r();
         closeContainer(p);
 
         /* Typecast MenuAnvilWrapper to MenuAnvil */
@@ -112,15 +131,15 @@ public class AnvilManager_V1_21_R7 extends AnvilWrapper {
      */
     void handleCloseInventoryEvent(@NotNull Player p) {
         EntityPlayer player = handle(p);
-        try {
-            Class<?> reasonClass = Class.forName("org.bukkit.event.inventory.InventoryCloseEvent$Reason");
-            Method handleInventoryCloseEvent = CraftEventFactory.class.getMethod(
-                    "handleInventoryCloseEvent", EntityHuman.class, reasonClass
-            );
-            handleInventoryCloseEvent.invoke(null, player, reasonClass.getField("OPEN_NEW").get(null));
-        } catch (ReflectiveOperationException e) {
-            CraftEventFactory.handleInventoryCloseEvent(player);
+
+        if(paperInventoryCloseHandle != null) {
+            try {
+                paperInventoryCloseHandle.invoke(player, paperInventoryCloseReasonOpenNew);
+                return;
+            } catch (Throwable ignored) {}
         }
+
+        CraftEventFactory.handleInventoryCloseEvent(player);
     }
 
     /*
