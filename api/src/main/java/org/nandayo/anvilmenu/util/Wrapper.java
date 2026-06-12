@@ -29,17 +29,40 @@ public final class Wrapper {
             Util.logInternal("Could not fetch server version!");
             return 1605;
         }
-        int major = 0;
+
+        // Older Minecraft versions such as 1.21.11, 1.19
+        if(ver[0].equals("1")) {
+            int major = 0, minor = 0;
+            try {
+                major = Integer.parseInt(ver[1]);
+            } catch (NumberFormatException ignored) {
+            }
+            if (ver.length > 2) {
+                try {
+                    minor = Integer.parseInt(ver[2]);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+
+            return major * 100 + minor; //2111
+        }
+
+        // Newer Minecraft versions such as 26.1.2
+        int year = 0, drop = 0, patch = 0;
         try {
-            major = Integer.parseInt(ver[1]);
+            year = Integer.parseInt(ver[0]);
         } catch (NumberFormatException ignored) {}
-        int minor = 0;
         if(ver.length > 2) {
             try {
-                minor = Integer.parseInt(ver[2]);
+                drop = Integer.parseInt(ver[1]);
+            } catch (NumberFormatException ignored) {}
+        }
+        if (ver.length > 3) {
+            try {
+                patch = Integer.parseInt(ver[2]);
             } catch (NumberFormatException ignored) {}
         }
 
-        return major * 100 + minor;
+        return year * 10000 + drop * 100 + patch; //260102
     }
 }
