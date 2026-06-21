@@ -13,12 +13,14 @@
     <version>0.4</version>
   </parent>
 
+  <properties>
+    <spigot.version>1.18.2-R0.1-SNAPSHOT</spigot.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
-      <version>1.18.2-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.nandayo</groupId>

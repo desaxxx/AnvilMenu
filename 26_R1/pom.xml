@@ -13,13 +13,14 @@
     <version>0.4</version>
   </parent>
 
+  <properties>
+    <spigot.version>26.1-R0.1-SNAPSHOT</spigot.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot</artifactId>
-      <version>26.1-R0.1-SNAPSHOT</version>
-<!--      <classifier>remapped-mojang</classifier>-->
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.nandayo</groupId>

@@ -42,6 +42,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- Spigot/spigot-api version is now declared PER MODULE via the
+         spigot.version property; this block only manages how the
+         dependency looks once a module sets that property. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.spigotmc</groupId>
+                <artifactId>spigot</artifactId>
+                <version>${spigot.version}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
@@ -100,12 +114,6 @@
             <artifactId>annotations</artifactId>
             <version>24.0.0</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.38</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
