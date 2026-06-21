@@ -21,11 +21,11 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
 @SuppressWarnings("unused")
-public class AnvilManager_V26_R1 extends AnvilWrapper {
+public class AnvilManager_V26_1_R1 extends AnvilWrapper {
 
     private MethodHandle paperInventoryCloseHandle;
     private Object paperInventoryCloseReasonOpenNew;
-    public AnvilManager_V26_R1() {
+    public AnvilManager_V26_1_R1() {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
 
@@ -36,7 +36,7 @@ public class AnvilManager_V26_R1 extends AnvilWrapper {
             paperInventoryCloseHandle = lookup.findStatic(
                     CraftEventFactory.class,
                     "handleInventoryCloseEvent",
-                    MethodType.methodType(void.class, ServerPlayer.class, reasonClass)
+                    MethodType.methodType(void.class, net.minecraft.world.entity.player.Player.class, reasonClass)
             );
         } catch (ReflectiveOperationException ignored) {}
     }

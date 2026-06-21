@@ -11,7 +11,9 @@
 
     <modules>
         <module>api</module>
-        <module>26_R1</module>
+        <module>26_2_R1</module>
+        <module>26_1_R2</module>
+        <module>26_1_R1</module>
         <module>1_21_R7</module>
         <module>1_21_R6</module>
         <module>1_21_R5</module>

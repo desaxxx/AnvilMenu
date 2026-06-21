@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>26_2_R1</artifactId>
+  <packaging>jar</packaging>
+
+  <parent>
+    <groupId>org.nandayo</groupId>
+    <artifactId>AnvilMenu</artifactId>
+    <version>0.4</version>
+  </parent>
+
+  <properties>
+    <spigot.version>26.2-R0.1-SNAPSHOT</spigot.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nandayo</groupId>
+      <artifactId>api</artifactId>
+      <version>0.4</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <release>25</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
